@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>家长会分享：考后复盘 · 手机管理 · 有效陪伴</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #2D3E6B;
+    --accent: #E87A5D;
+    --accent2: #5BA3A0;
+    --accent3: #C4975A;
+    --bg: #F7F5F0;
+    --card: #FFFFFF;
+    --text: #2C2C2C;
+    --text-light: #777;
+    --shadow: 0 8px 32px rgba(0,0,0,0.08);
+    --radius: 16px;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === Slide Container === */
+  .deck {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slides-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 40px 48px 60px;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.prev {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .slide-inner {
+    max-width: 880px;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* === Slide Number / Progress === */
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .slide-number {
+    font-weight: 500;
+  }
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .progress-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: 0.3s;
+  }
+  .progress-dot.active {
+    background: var(--accent);
+    transform: scale(1.3);
+  }
+
+  /* === Cover === */
+  .cover {
+    text-align: center;
+    justify-content: center !important;
+    background: linear-gradient(135deg, #2D3E6B 0%, #1a2744 100%);
+    color: #fff;
+    padding: 60px 48px;
+  }
+  .cover .slide-inner { justify-content: center; }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(4px);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+  .cover h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .cover h1 .highlight {
+    color: var(--accent);
+  }
+  .cover p {
+    font-size: 18px;
+    opacity: 0.8;
+    max-width: 520px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+  .cover .meta {
+    font-size: 14px;
+    opacity: 0.5;
+    letter-spacing: 1px;
+  }
+  .cover .start-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 16px;
+  }
+  .cover .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,122,93,0.4); }
+
+  /* === Content Slides === */
+  .slide-title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .slide-subtitle {
+    font-size: 15px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+  }
+
+  .slide-section-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  /* === Image Cards === */
+  .img-card {
+    width: 100%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin: 16px 0;
+    background: var(--card);
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+  }
+  .img-card:hover { transform: scale(1.01); }
+  .img-card img {
+    width: 100%;
+    display: block;
+    max-height: 380px;
+    object-fit: contain;
+    background: #fff;
+  }
+  .img-card .img-caption {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-light);
+    background: var(--card);
+    text-align: center;
+    border-top: 1px solid #f0f0f0;
+  }
+  .img-card .click-hint {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    backdrop-filter: blur(4px);
+  }
+
+  /* === Interactive Elements === */
+  .accordion { margin: 12px 0; }
+  .accordion-item {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: 0.3s;
+  }
+  .accordion-item.open { border-color: var(--accent); }
+  .accordion-header {
+    padding: 14px 18px;
+    background: var(--card);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    font-size: 15px;
+    user-select: none;
+    transition: 0.2s;
+  }
+  .accordion-header:hover { background: #fafafa; }
+  .accordion-header .icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .accordion-header .arrow {
+    margin-left: auto;
+    transition: 0.3s;
+    font-size: 12px;
+  }
+  .accordion-item.open .accordion-header .arrow { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .accordion-item.open .accordion-body { max-height: 500px; }
+  .accordion-body-inner {
+    padding: 0 18px 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #555;
+  }
+
+  /* === Toggle Cards === */
+  .toggle-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .toggle-card {
+    padding: 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid #eee;
+    text-align: center;
+  }
+  .toggle-card .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+  .toggle-card .label { font-size: 14px; font-weight: 500; }
+  .toggle-card .sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+  .toggle-card.selected-bad {
+    border-color: var(--accent);
+    background: #FFF5F0;
+  }
+  .toggle-card.selected-good {
+    border-color: var(--accent2);
+    background: #F0F8F7;
+  }
+
+  /* === Checkbox List === */
+  .checklist { margin: 12px 0; }
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--card);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid #eee;
+    user-select: none;
+  }
+  .checklist-item:hover { border-color: #ddd; }
+  .checklist-item .check {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: 0.3s;
+    font-size: 13px;
+  }
+  .checklist-item.done .check {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: #fff;
+  }
+  .checklist-item.done { border-color: var(--accent2); background: #F0F8F7; }
+  .checklist-item .text { font-size: 14px; }
+
+  /* === Emotional Switch === */
+  .switch-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--card);
+    border-radius: 12px;
+    margin: 8px 0;
+    border: 1px solid #eee;
+  }
+  .switch-row .before { font-size: 14px; color: var(--accent); flex: 1; text-align: right; }
+  .switch-row .arrow-icon { font-size: 20px; color: var(--accent3); }
+  .switch-row .after { font-size: 14px; color: var(--accent2); flex: 1; }
+
+  /* === Quote Block === */
+  .quote-block {
+    background: var(--card);
+    border-left: 4px solid var(--accent3);
+    padding: 20px 24px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 16px 0;
+    font-style: italic;
+    line-height: 1.7;
+    color: #555;
+    font-size: 15px;
+  }
+  .quote-block .source {
+    margin-top: 8px;
+    font-style: normal;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  /* === Summary Card === */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .summary-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .summary-card .num {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .summary-card .topic {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .summary-card .phrase {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  /* === Navigation === */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: var(--card);
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-btn:hover { transform: translateY(-1px); }
+  .nav-btn.prev {
+    background: #f0f0f0;
+    color: var(--text);
+  }
+  .nav-btn.prev:hover { background: #e5e5e5; }
+  .nav-btn.next {
+    background: var(--primary);
+    color: #fff;
+  }
+  .nav-btn.next:hover { box-shadow: 0 4px 16px rgba(45,62,107,0.3); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; transform: none !important; }
+  .nav-label {
+    font-size: 12px;
+    color: var(--text-light);
+    text-align: center;
+  }
+
+  /* === Fullscreen Image Overlay === */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 20px;
+  }
+  .overlay.open { display: flex; }
+  .overlay img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  .overlay .close-btn {
+    position: absolute;
+    top: 20px; right: 20px;
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.3s;
+    background: none;
+    border: none;
+  }
+  .overlay .close-btn:hover { opacity: 1; }
+
+  /* === Responsive === */
+  @media (max-width: 768px) {
+    .slide { padding: 24px 20px 52px; }
+    .cover { padding: 40px 24px; }
+    .toggle-pair { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .nav-bar { padding: 10px 12px; }
+    .nav-btn { padding: 8px 16px; font-size: 13px; }
+    .switch-row { flex-direction: column; text-align: center; }
+    .switch-row .before { text-align: center; }
+    .switch-row .arrow-icon { transform: rotate(90deg); }
+    .img-card img { max-height: 260px; }
+    .accordion-header { font-size: 14px; }
+  }
+
+  /* === Animations === */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .slide.active .anim-fade { animation: fadeUp 0.6s ease forwards; }
+  .slide.active .anim-fade-d1 { animation: fadeUp 0.6s ease 0.1s forwards; opacity: 0; }
+  .slide.active .anim-fade-d2 { animation: fadeUp 0.6s ease 0.2s forwards; opacity: 0; }
+  .slide.active .anim-fade-d3 { animation: fadeUp 0.6s ease 0.3s forwards; opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- ========== Fullscreen Image Overlay ========== -->
+<div class="overlay" id="overlay" onclick="closeOverlay()">
+  <button class="close-btn" onclick="closeOverlay()">✕</button>
+  <img id="overlay-img" src="" alt="">
+</div>
+
+<!-- ========== Slide Deck ========== -->
+<div class="deck">
+  <div class="slides-wrapper" id="slidesWrapper">
+
+    <!-- ======== SLIDE 0: COVER ======== -->
+    <div class="slide cover active" data-slide="0">
+      <div class="slide-inner">
+        <div class="cover-badge">👨‍👩‍👧‍👦 家长会分享</div>
+        <h1>考完了，周末了<br><span class="highlight">跟孩子好好说话</span></h1>
+        <p>考后复盘怎么做 · 周末手机怎么管 · 有效陪伴怎么陪<br>一份接地气的家长实用指南</p>
+        <div class="meta">约15分钟 · 三张图 · 三个关键词</div>
+        <button class="start-btn" onclick="goSlide(1)">开始分享 →</button>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 1: 开场 ======== -->
+    <div class="slide" data-slide="1">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">01 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">开场</div>
+        <h2 class="slide-title anim-fade-d1">今晚聊三件事</h2>
+        <p class="slide-subtitle anim-fade-d2">不聊分数排名，聊三个每个家庭都头疼的问题</p>
+
+        <div class="accordion anim-fade-d3">
+          <div class="accordion-item open" onclick="toggleAccordion(this)">
+            <div class="accordion-header">
+              <span class="icon" style="background:#E87A5D20;color:#E87A5D;">📝</span>
+              考后复盘——怎么聊，孩子才愿意听？
+              <span class="arrow">▾</span>
+            </div>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                考完试，孩子回家。很多家长第一句："考了多少？第几名？"<br>
+                换一下——先问感受，再问分数。这一句之差，决定了孩子接下来是跟你敞开说，还是关上房门。
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item" onclick="toggleAccordion(this)">
+            <div class="accordion-header">
+              <span class="icon" style="background:#5BA3A020;color:#5BA3A0;">📱</span>
+              周末手机——怎么管，才不吵不闹？
+              <span class="arrow">▾</span>
+            </div>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                手机是家庭战争的头号导火索。但问题不在手机——<strong>在"水一样的边界"</strong>。
+                今天管明天松、自己刷手机却要求孩子自律——这样的边界，孩子永远踩不到底。
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item" onclick="toggleAccordion(this)">
+            <div class="accordion-header">
+              <span class="icon" style="background:#C4975A20;color:#C4975A;">❤️</span>
+              有效陪伴——你真的在陪他吗？
+              <span class="arrow">▾</span>
+            </div>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                "我天天陪他写作业到十一点！"——你陪的是孩子，还是作业？<br>
+                真正的陪伴不是坐在旁边，而是让他感觉到<strong>你在他那边</strong>。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote-block anim-fade-d3" style="margin-top:auto;">
+          💡 三件事，一个共同的关键词：<strong>你的声音大小和说话方式</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 2: 低声教育 ======== -->
+    <div class="slide" data-slide="2">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">02 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">第一段 · 科学依据</div>
+        <h2 class="slide-title anim-fade-d1">吼，是最没用的教育</h2>
+        <p class="slide-subtitle anim-fade-d2">低声教育是最好的家教。很多的亲子矛盾来源于音调过高。</p>
+
+        <div class="img-card anim-fade-d2" onclick="openOverlay(this.querySelector('img').src)">
+          <img src="img/slide-low-voice.jpg" alt="低声教育" loading="lazy">
+          <div class="click-hint">👆 点击放大</div>
+          <div class="img-caption">图：低声教育的科学依据</div>
+        </div>
+
+        <div class="quote-block anim-fade-d3">
+          <strong>被吼后，孩子的性格会"变"——</strong><br>
+          父母的大吼大叫会让孩子的应激激素水平增高，导致大脑结构发生变化。<br>
+          <strong>凶得越多，笨得越快。</strong>言语理解能力、表达能力越来越差。
+          <div class="source">—— 这不是鸡汤，是生理学</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 3: 考后复盘三步法 ======== -->
+    <div class="slide" data-slide="3">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">03 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">第一段 · 实战方法</div>
+        <h2 class="slide-title anim-fade-d1">考后复盘，三步就够了</h2>
+        <p class="slide-subtitle anim-fade-d2">记不住三步？记住第一步也行</p>
+
+        <div class="accordion anim-fade-d1">
+          <div class="accordion-item open" onclick="toggleAccordion(this)">
+            <div class="accordion-header">
+              <span class="icon" style="background:#E87A5D20;color:#E87A5D;">❶</span>
+              先问感受，再问分数
+              <span class="arrow">▾</span>
+            </div>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                ❌ "考了多少分？第几名？"<br>
+                ✅ <strong>"这次感觉怎么样？有没有哪道题让你印象特别深？"</strong><br><br>
+                不管考得好不好，先让他放松。考好了说"不错，辛苦了"；考砸了说"没事，来分析一下"。
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item" onclick="toggleAccordion(this)">
+            <div class="accordion-header">
+              <span class="icon" style="background:#5BA3A020;color:#5BA3A0;">❷</span>
+              找亮点，再找漏洞
+              <span class="arrow">▾</span>
+            </div>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                哪怕只进步了两分——<br>
+                ✅ <strong>"这一块你做得不错，说明最近复习有成效。"</strong><br>
+                然后才是——"这些丢分的地方，你觉得是什么原因？"<br><br>
+                <strong>先肯定，再分析。</strong>顺序很重要。
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item" onclick="toggleAccordion(this)">
+            <div class="accordion-header">
+              <span class="icon" style="background:#C4975A20;color:#C4975A;">❸</span>
+              让他自己说方案
+              <span class="arrow">▾</span>
+            </div>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                ✅ <strong>"下一阶段你打算怎么补？需要我做什么？"</strong><br><br>
+                别替他安排，让他自己拿主意。<br>
+                <strong>成长是他自己的事，浇水才是你的事。</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 4: 悬崖与水 ======== -->
+    <div class="slide" data-slide="4">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">04 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">核心隐喻 · 贯穿全场</div>
+        <h2 class="slide-title anim-fade-d1">悬崖还是水——你的边界清楚吗？</h2>
+        <p class="slide-subtitle anim-fade-d2">你以为是悬崖最危险？其实水才是最危险的</p>
+
+        <div class="img-card anim-fade-d1" onclick="openOverlay(this.querySelector('img').src)">
+          <img src="img/slide-boundary-metaphor.jpg" alt="边界的隐喻" loading="lazy">
+          <div class="click-hint">👆 点击放大</div>
+          <div class="img-caption">图：悬崖与水的边界隐喻</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;" class="anim-fade-d2">
+          <div style="background:#FFF5F0;border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:24px;">🏔️</div>
+            <div style="font-weight:600;color:#E87A5D;font-size:14px;">悬崖</div>
+            <div style="font-size:12px;color:#666;margin-top:4px;">清晰可见，危险明确<br>因为敬畏而安全</div>
+          </div>
+          <div style="background:#E8F4F3;border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:24px;">🌊</div>
+            <div style="font-weight:600;color:#5BA3A0;font-size:14px;">水</div>
+            <div style="font-size:12px;color:#666;margin-top:4px;">看似平静，边界模糊<br>因为麻痹而致命</div>
+          </div>
+        </div>
+
+        <div class="quote-block anim-fade-d3" style="margin-top:8px;">
+          <strong>水为什么淹死人？因为边界不清。</strong><br>
+          孩子总以为还可以再往前走一步，结果一脚踩空了。
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 5: 手机管理 ======== -->
+    <div class="slide" data-slide="5">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">05 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">第二段 · 实战方法</div>
+        <h2 class="slide-title anim-fade-d1">手机管理的三个关键</h2>
+        <p class="slide-subtitle anim-fade-d2">做悬崖，别做水——定了就不要变</p>
+
+        <div class="checklist anim-fade-d1">
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <div class="text"><strong>提前定，不要临时管</strong> —— 和孩子一起写《周末手机公约》，白纸黑字贴冰箱上</div>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <div class="text"><strong>你自己先放下手机</strong> —— 你刷抖音吼他不看手机，公平吗？</div>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check">✓</div>
+            <div class="text"><strong>用好玩的填时间</strong> —— 少说"别玩手机"，多说"周末去打羽毛球吧"</div>
+          </div>
+        </div>
+
+        <!-- Interactive Pledge -->
+        <div class="anim-fade-d2" style="margin-top:8px;">
+          <div style="font-size:13px;color:var(--text-light);margin-bottom:6px;">👆 现场互动：你做到几条了？点击勾选</div>
+          <div class="quote-block" style="margin:0;">
+            <strong>家庭是人生最初的学校。</strong>自律不是在学校学的，<br>是在家里一天天养成的。
+            <div class="source">—— 蔡元培（引自图2）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 6: 改变认知 ======== -->
+    <div class="slide" data-slide="6">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">06 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">第三段 · 认知基础</div>
+        <h2 class="slide-title anim-fade-d1">两个最常见的误区</h2>
+        <p class="slide-subtitle anim-fade-d2">你踩了几个？</p>
+
+        <div class="img-card anim-fade-d1" onclick="openOverlay(this.querySelector('img').src)">
+          <img src="img/slide-change-cognition.jpg" alt="改变认知" loading="lazy">
+          <div class="click-hint">👆 点击放大</div>
+          <div class="img-caption">图：改变认知——两个家长误区</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;" class="anim-fade-d2">
+          <div style="background:#FFF5F0;border-radius:12px;padding:14px;">
+            <div style="font-weight:600;color:#E87A5D;font-size:14px;margin-bottom:4px;">误区一</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;">
+              "撒手不管" = "静待花开"<br>
+              <span style="color:var(--accent2);font-weight:500;">→ 静待花开是结果不强求，<br>不是过程不作为</span>
+            </div>
+          </div>
+          <div style="background:#FFF5F0;border-radius:12px;padding:14px;">
+            <div style="font-weight:600;color:#E87A5D;font-size:14px;margin-bottom:4px;">误区二</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;">
+              把教育全"包"给老师<br>
+              <span style="color:var(--accent2);font-weight:500;">→ 家庭是人生最初的学校<br>浇水是父母的责任</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 7: 有效陪伴 ======== -->
+    <div class="slide" data-slide="7">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">07 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">第三段 · 爱的质量</div>
+        <h2 class="slide-title anim-fade-d1">你在陪他，还是在陪作业？</h2>
+        <p class="slide-subtitle anim-fade-d2">点击切换，看看哪一面对应你的日常</p>
+
+        <div class="toggle-pair anim-fade-d1">
+          <div class="toggle-card" data-type="bad" onclick="selectToggle(this,'bad')">
+            <span class="emoji">😤</span>
+            <span class="label">"我说的都是为你好"</span>
+            <span class="sub">批评过多 → 孩子学会谴责</span>
+          </div>
+          <div class="toggle-card" data-type="bad" onclick="selectToggle(this,'bad')">
+            <span class="emoji">📋</span>
+            <span class="label">"作业写完了没？"</span>
+            <span class="sub">挑剔过多 → 孩子学会抱怨</span>
+          </div>
+          <div class="toggle-card" data-type="bad" onclick="selectToggle(this,'bad')">
+            <span class="emoji">🚫</span>
+            <span class="label">"不行！我说了算"</span>
+            <span class="sub">强制过多 → 孩子学会对抗</span>
+          </div>
+          <div class="toggle-card" data-type="good" onclick="selectToggle(this,'good')">
+            <span class="emoji">💚</span>
+            <span class="label">"今天累不累？"</span>
+            <span class="sub">坐下来，听他先说完</span>
+          </div>
+        </div>
+
+        <div class="anim-fade-d2">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;">💡 把这三句话换一换</div>
+          <div class="switch-row">
+            <span class="before">❌ "作业写完了没？"</span>
+            <span class="arrow-icon">→</span>
+            <span class="after">✅ "今天有什么高兴的事？"</span>
+          </div>
+          <div class="switch-row">
+            <span class="before">❌ "考了多少分？"</span>
+            <span class="arrow-icon">→</span>
+            <span class="after">✅ "跟我讲讲你们班的事？"</span>
+          </div>
+          <div class="switch-row">
+            <span class="before">❌ "别玩手机了！"</span>
+            <span class="arrow-icon">→</span>
+            <span class="after">✅ "周末想吃啥？"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SLIDE 8: 总结 ======== -->
+    <div class="slide" data-slide="8">
+      <div class="slide-inner">
+        <div class="slide-header anim-fade">
+          <span class="slide-number">08 / 08</span>
+          <div class="progress-dots"></div>
+        </div>
+        <div class="slide-section-label anim-fade-d1">总结</div>
+        <h2 class="slide-title anim-fade-d1">三张图·三句话</h2>
+        <p class="slide-subtitle anim-fade-d2">今天带回家的，就这三件事</p>
+
+        <div class="summary-grid anim-fade-d1">
+          <div class="summary-card" style="border-top:3px solid var(--accent);">
+            <div class="num" style="color:var(--accent);">📝</div>
+            <div class="topic">考后复盘</div>
+            <div class="phrase">先问心情，再问分数<br>让他自己说方案<br><strong>小声说话，清楚划界</strong></div>
+          </div>
+          <div class="summary-card" style="border-top:3px solid var(--accent2);">
+            <div class="num" style="color:var(--accent2);">📱</div>
+            <div class="topic">手机管理</div>
+            <div class="phrase">定规则，贴冰箱<br>你自己先放下手机<br><strong>做悬崖，别做水</strong></div>
+          </div>
+          <div class="summary-card" style="border-top:3px solid var(--accent3);">
+            <div class="num" style="color:var(--accent3);">❤️</div>
+            <div class="topic">有效陪伴</div>
+            <div class="phrase">陪人，不是陪作业<br>少唠叨，多听他说<br><strong>让他感觉你在他那边</strong></div>
+          </div>
+        </div>
+
+        <div class="quote-block anim-fade-d2" style="text-align:center;border-left-color:var(--primary);">
+          <strong style="font-size:18px;">教育不是靠吼，是靠设计。</strong><br>
+          今天回去，试着跟孩子好好说一句话。你会有惊喜的。
+        </div>
+
+        <div style="text-align:center;margin-top:12px;font-size:13px;color:var(--text-light);" class="anim-fade-d3">
+          🦞 感谢聆听 · 愿每个家庭都有一点小改变
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- === Navigation Bar === -->
+  <div class="nav-bar">
+    <button class="nav-btn prev" id="prevBtn" onclick="goSlide(current - 1)">← 上一页</button>
+    <div class="nav-label" id="navLabel">1 / 9</div>
+    <button class="nav-btn next" id="nextBtn" onclick="goSlide(current + 1)">下一页 →</button>
+  </div>
+</div>
+
+<script>
+  const totalSlides = document.querySelectorAll('.slide').length;
+  let current = 0;
+
+  function updateProgress() {
+    document.querySelectorAll('.progress-dots').forEach(dotContainer => {
+      dotContainer.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'progress-dot' + (i === current ? ' active' : '');
+        dotContainer.appendChild(dot);
+      }
+    });
+    document.getElementById('navLabel').textContent = `${current + 1} / ${totalSlides}`;
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').textContent = current === totalSlides - 1 ? '完成 ✓' : '下一页 →';
+  }
+
+  function goSlide(n) {
+    if (n < 0 || n >= totalSlides) return;
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i < n) s.classList.add('prev');
+    });
+    slides[n].classList.add('active');
+    current = n;
+    updateProgress();
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      goSlide(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goSlide(current - 1);
+    }
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 60) {
+      if (diff > 0) goSlide(current + 1);
+      else goSlide(current - 1);
+    }
+  });
+
+  // Accordion
+  function toggleAccordion(item) {
+    item.classList.toggle('open');
+  }
+
+  // Checklist
+  function toggleCheck(item) {
+    item.classList.toggle('done');
+  }
+
+  // Toggle cards
+  function selectToggle(card, type) {
+    const pair = card.closest('.toggle-pair');
+    if (type === 'bad') {
+      // Clear good selections in this pair
+      pair.querySelectorAll('.toggle-card.selected-good').forEach(c => c.classList.remove('selected-good'));
+      card.classList.toggle('selected-bad');
+    } else {
+      pair.querySelectorAll('.toggle-card.selected-bad').forEach(c => c.classList.remove('selected-bad'));
+      card.classList.toggle('selected-good');
+    }
+  }
+
+  // Image overlay
+  function openOverlay(src) {
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('overlay-img').src = src;
+  }
+  function closeOverlay() {
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  // Init
+  updateProgress();
+</script>
+</body>
+</html>
